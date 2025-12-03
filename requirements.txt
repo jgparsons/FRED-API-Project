@@ -1,0 +1,9 @@
+kaleido
+requests
+datetime
+pytest
+pandas
+plotly
+flask
+gunicorn
+dotenv
