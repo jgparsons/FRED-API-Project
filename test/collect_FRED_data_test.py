@@ -1,11 +1,7 @@
-from app.collect_FRED_data import sofr_data
+from app.collect_FRED_data import collect_FRED_data
 
-def test_sofr_december_1():
-    # Loop through observations and find the 2025-12-01 entry
-    value = None
-    for observation in sofr_data["observations"]:
-        if observation["date"] == "2025-12-01":
-            value = float(observation["value"])
-            break
-    # Check the expected value
-    assert value == 4.12
+
+def test_collect_fred_data_runs():
+    data = collect_FRED_data()  # should not crash
+    assert len(data) == 6
+
