@@ -1,0 +1,44 @@
+{# about.html #}
+{% extends "layout.html" %}
+{% block title %}About | Fed Rate Watch{% endblock %}
+{% block content %}
+
+<h1 class="mb-3">About the project</h1>
+<p class="lead text-muted mb-4">
+  Fed Rate Watch is a student-built tool that tracks key Federal Reserve policy rates
+  and turns them into simple visuals and daily email summaries.
+</p>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">What we built</h5>
+        <ul class="mb-0 text-muted">
+          <li>Pulls data from the FRED API for ON RRP, EFFR, IORB, SOFR, and SRF.</li>
+          <li>Aggregates the last 30 days into a single chart for quick comparison.</li>
+          <li>Sends an email with today’s rates and the chart as an inline image.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Why we care about Fed rates</h5>
+        <p class="text-muted mb-2">
+          Policy rates shape borrowing costs for everything from credit cards and auto loans
+          to business investment and housing. Understanding how they move is essential
+          for anyone interested in macro, markets, or finance.
+        </p>
+        <p class="text-muted mb-0">
+          Our goal was to make this information easier to follow for students and early-career
+          analysts who don’t have time to parse every FOMC release.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

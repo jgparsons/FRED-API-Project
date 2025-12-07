@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block title %}Rates Dashboard | Fed Rate Watch{% endblock %}
+{% block content %}
+
+<h1 class="mb-3">Rates dashboard</h1>
+<p class="text-muted mb-4">
+  Latest readings for key short-term interest rates, plus a 30-day history chart.
+</p>
+
+<div class="row g-4">
+  <!-- Today's numbers -->
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Today’s values</h5>
+        <ul class="list-unstyled text-muted mb-0">
+          <li class="mb-1">
+            <strong>ON RRP:</strong> {{ onrrp_today if onrrp_today is not none else "N/A" }}
+          </li>
+          <li class="mb-1">
+            <strong>EFFR:</strong> {{ effr_today if effr_today is not none else "N/A" }}
+          </li>
+          <li class="mb-1">
+            <strong>IORB:</strong> {{ iorb_today if iorb_today is not none else "N/A" }}
+          </li>
+          <li class="mb-1">
+            <strong>SOFR:</strong> {{ sofr_today if sofr_today is not none else "N/A" }}
+          </li>
+          <li>
+            <strong>SRF:</strong> {{ srf_today if srf_today is not none else "N/A" }}
+          </li>
+        </ul>
+        <p class="small text-muted mt-3 mb-0">
+          Values shown are most recent observations from the FRED series used in this project.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">30-day history</h5>
+        {% if chart_base64 %}
+          <img
+            class="img-fluid rounded"
+            src="data:image/png;base64,{{ chart_base64 }}"
+            alt="Fed rate chart for last 30 days"
+          >
+        {% else %}
+          <p class="text-muted mb-0">
+            Chart unavailable at the moment. Try reloading, or check that the FRED API key is set.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

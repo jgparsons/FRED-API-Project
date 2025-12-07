@@ -62,6 +62,13 @@ def collect_FRED_data():
     df_all = df_all.dropna(thresh=len(df_all.columns) - 1)
 
     fig = px.line(df_all)
+
+    fig.update_layout(
+        xaxis_title="Date",
+        yaxis_title="Rate (%)",
+        legend_title="Series",
+    )
+
     png_bytes = pio.to_image(fig, format="png")
 
     return (

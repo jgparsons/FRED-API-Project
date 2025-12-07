@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block title %}Home | Fed Rate Watch{% endblock %}
+{% block content %}
+
+<div class="row align-items-center mb-4">
+  <div class="col-lg-7">
+    <p class="text-uppercase text-info mb-1" style="letter-spacing:.12em;font-size:.8rem;">
+      Federal Reserve · Rates · Daily Email Updates
+    </p>
+    <h1 class="display-6 fw-semibold mb-3">
+      Track key Fed rates in one place.
+    </h1>
+    <p class="lead text-muted mb-4">
+      Fed Rate Watch pulls data from the FRED API to monitor short-term policy
+      rates and sends a clean summary to your inbox.
+    </p>
+
+    <div class="d-flex flex-wrap gap-2">
+      <a href="/subscribe" class="btn btn-primary btn-lg">
+        <i class="bi bi-envelope-plus me-1"></i> Subscribe to updates
+      </a>
+      <a href="/rate_updates" class="btn btn-outline-light btn-lg">
+        <i class="bi bi-graph-up me-1"></i> View rates dashboard
+      </a>
+    </div>
+  </div>
+
+  <div class="col-lg-5 mt-4 mt-lg-0">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Today’s snapshot</h5>
+        {% if current_rate %}
+          <p class="text-muted mb-1">Effective Federal Funds Rate (EFFR)</p>
+          <p class="display-5 fw-semibold mb-2">
+            {{ current_rate }}
+            <span class="fs-6 text-muted">%</span>
+          </p>
+          <p class="small text-muted mb-0">
+            Last updated: {{ last_updated or "N/A" }}
+          </p>
+        {% else %}
+          <p class="text-muted mb-0">
+            Today's rate is not available right now. Try refreshing the page in a moment.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-2">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">What this app does</h5>
+        <ul class="mb-0 text-muted">
+          <li>Fetches recent values for ON RRP, EFFR, IORB, SOFR, and SRF.</li>
+          <li>Builds a concise chart of the last 30 days of activity.</li>
+          <li>Sends email updates with both numbers and visuals.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Who it’s for</h5>
+        <p class="text-muted mb-2">
+          Students, early-career analysts, and anyone trying to connect Fed policy
+          to real-world markets.
+        </p>
+        <p class="text-muted mb-0">
+          Instead of digging through press releases, you get a quick snapshot
+          and a visual every day.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
