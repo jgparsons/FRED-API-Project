@@ -1,12 +1,32 @@
-@home_routes.route("/unsubscribe", methods=["GET", "POST"])
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+
+from app.send_emails import unsubscribe_email
+
+unsubscribe_routes = Blueprint("unsubscribe_routes", __name__)
+
+
+@unsubscribe_routes.route("/unsubscribe", methods=["GET", "POST"])
 def unsubscribe():
     if request.method == "POST":
-        email = request.form["email"]
+        email = request.form.get("email")
 
-        # TODO: actually remove this email from your subscriber store or Mailgun list
-        # For now, just pretend and flash a message:
-        flash(f"If {email} was on our list, it will be removed from future mailings.", "info")
+        if not email:
+            flash("Please enter the email address you subscribed with.", "warning")
+            return redirect(url_for("unsubscribe_routes.unsubscribe"))
 
-        return redirect(url_for("home_routes.unsubscribe"))
+        success = unsubscribe_email(email)
+
+        if success:
+            flash(
+                f"{email} has been unsubscribed and will no longer receive mailings.",
+                "info",
+            )
+        else:
+            flash(
+                "Something went wrong contacting the email service. Please try again later.",
+                "danger",
+            )
+
+        return redirect(url_for("unsubscribe_routes.unsubscribe"))
 
     return render_template("unsubscribe.html", active_page="unsubscribe")

@@ -26,24 +26,32 @@
   </div>
 
   <div class="col-lg-5 mt-4 mt-lg-0">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title mb-3">Today’s snapshot</h5>
-        {% if current_rate %}
-          <p class="text-muted mb-1">Effective Federal Funds Rate (EFFR)</p>
-          <p class="display-5 fw-semibold mb-2">
-            {{ current_rate }}
-            <span class="fs-6 text-muted">%</span>
-          </p>
-          <p class="small text-muted mb-0">
-            Last updated: {{ last_updated or "N/A" }}
-          </p>
-        {% else %}
-          <p class="text-muted mb-0">
-            Today's rate is not available right now. Try refreshing the page in a moment.
-          </p>
-        {% endif %}
-      </div>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Rate Snapshot</h5>
+
+      {% if current_rate %}
+        <p class="text-muted mb-1">Effective Federal Funds Rate (EFFR)</p>
+
+        <p class="display-5 fw-semibold mb-2">
+          {{ current_rate }}
+          <span class="fs-6 text-muted">%</span>
+        </p>
+
+        <!-- NEW UX text: the source + date -->
+        <p class="small text-muted mb-1">
+          {{ effr_label }}  
+          <span class="fw-semibold">{{ last_updated }}</span>
+        </p>
+
+        <p class="small text-muted mb-0">
+          Source: Federal Reserve Economic Data (FRED)
+        </p>
+      {% else %}
+        <p class="text-muted mb-0">
+          Latest rate unavailable. Please refresh or check back later.
+        </p>
+      {% endif %}
     </div>
   </div>
 </div>

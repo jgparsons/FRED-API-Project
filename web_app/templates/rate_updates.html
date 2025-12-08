@@ -8,30 +8,85 @@
 </p>
 
 <div class="row g-4">
+
   <!-- Today's numbers -->
   <div class="col-lg-4">
     <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title mb-3">Today’s values</h5>
+
+        {# If effr_label != "Today's value", we treat today's values as unavailable #}
+        {% set show_today = (effr_label == "Today's value") %}
+
         <ul class="list-unstyled text-muted mb-0">
           <li class="mb-1">
-            <strong>ON RRP:</strong> {{ onrrp_today if onrrp_today is not none else "N/A" }}
+            <strong>ON RRP:</strong>
+            {% if show_today %}
+              {{ onrrp_today if onrrp_today is not none else "N/A" }}
+            {% else %}
+              {% if onrrp_today is not none %}
+                N/A (Latest = {{ onrrp_today }})
+              {% else %}
+                N/A
+              {% endif %}
+            {% endif %}
           </li>
+
           <li class="mb-1">
-            <strong>EFFR:</strong> {{ effr_today if effr_today is not none else "N/A" }}
+            <strong>EFFR:</strong>
+            {% if show_today %}
+              {{ effr_today if effr_today is not none else "N/A" }}
+            {% else %}
+              {% if effr_today is not none %}
+                N/A (Latest = {{ effr_today }})
+              {% else %}
+                N/A
+              {% endif %}
+            {% endif %}
           </li>
+
           <li class="mb-1">
-            <strong>IORB:</strong> {{ iorb_today if iorb_today is not none else "N/A" }}
+            <strong>IORB:</strong>
+            {% if show_today %}
+              {{ iorb_today if iorb_today is not none else "N/A" }}
+            {% else %}
+              {% if iorb_today is not none %}
+                N/A (Latest = {{ iorb_today }})
+              {% else %}
+                N/A
+              {% endif %}
+            {% endif %}
           </li>
+
           <li class="mb-1">
-            <strong>SOFR:</strong> {{ sofr_today if sofr_today is not none else "N/A" }}
+            <strong>SOFR:</strong>
+            {% if show_today %}
+              {{ sofr_today if sofr_today is not none else "N/A" }}
+            {% else %}
+              {% if sofr_today is not none %}
+                N/A (Latest = {{ sofr_today }})
+              {% else %}
+                N/A
+              {% endif %}
+            {% endif %}
           </li>
+
           <li>
-            <strong>SRF:</strong> {{ srf_today if srf_today is not none else "N/A" }}
+            <strong>SRF:</strong>
+            {% if show_today %}
+              {{ srf_today if srf_today is not none else "N/A" }}
+            {% else %}
+              {% if srf_today is not none %}
+                N/A (Latest = {{ srf_today }})
+              {% else %}
+                N/A
+              {% endif %}
+            {% endif %}
           </li>
         </ul>
+
         <p class="small text-muted mt-3 mb-0">
-          Values shown are most recent observations from the FRED series used in this project.
+          Using the most recent observations from FRED.
         </p>
       </div>
     </div>

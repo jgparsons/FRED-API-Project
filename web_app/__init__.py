@@ -1,10 +1,9 @@
-# app/web_app/__init__.py
+# web_app/__init__.py
 
 import os
 from flask import Flask
 from dotenv import load_dotenv
 
-# Load environment variables (MAILGUN, FRED API KEY, SECRET KEY, etc.)
 load_dotenv()
 
 def create_app():
@@ -15,19 +14,24 @@ def create_app():
 
     app = Flask(
         __name__,
-        template_folder="templates",  # where HTML files live
-        static_folder="static"       # if you add CSS/images
+        template_folder="templates",
+        static_folder="static"
     )
 
-    # SECRET KEY for flash messages, sessions, CSRF
+    # SECRET KEY for flash messaging & sessions
     app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret-key")
 
     # ---- Register route blueprints ---- #
     from .routes.home_routes import home_routes
     app.register_blueprint(home_routes)
 
-    # ---- More blueprints can plug in later ---- #
-    # from .routes.rates_routes import rates_routes
-    # app.register_blueprint(rates_routes)
+    from .routes.rate_updates_routes import rate_updates_routes
+    app.register_blueprint(rate_updates_routes)
+
+    from .routes.unsubscribe_routes import unsubscribe_routes
+    app.register_blueprint(unsubscribe_routes)
+
+    from .routes.subscribe_routes import subscribe_routes
+    app.register_blueprint(subscribe_routes)
 
     return app

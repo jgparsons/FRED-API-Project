@@ -28,17 +28,48 @@ def collect_FRED_data():
     sofr_data = requests.get(sofr_url).json()
     srf_data = requests.get(srf_url).json()
 
-    def extract_today(json_data):
-        for obs in json_data["observations"]:
-            if obs["date"] == str(today):
-                return float(obs["value"]) if obs["value"] != "." else None
-        return None
+    def extract_latest(json_data):
+        """
+        Return (latest_value, latest_date, label_string)
 
-    onrrp_today = extract_today(onrrp_data)
-    effr_today = extract_today(effr_data)
-    iorb_today = extract_today(iorb_data)
-    sofr_today = extract_today(sofr_data)
-    srf_today = extract_today(srf_data)
+        latest_date is the most recent date in the observations
+        with a non-missing value.
+
+        label_string is:
+          - "Today's value" if latest_date == today
+          - "Latest value" otherwise
+        """
+        latest_value = None
+        latest_date = None  
+
+        for obs in json_data["observations"]:
+            if obs["value"] == ".":
+                continue
+
+            date_obj = datetime.datetime.strptime(
+                obs["date"], "%Y-%m-%d"
+            ).date()
+            value = float(obs["value"])
+
+            latest_value = value
+            latest_date = date_obj
+
+        if latest_value is None or latest_date is None:
+            return None, None, None
+
+        if latest_date == today:
+            label = "Today's value"
+        else:
+            label = "Latest value"
+
+        return latest_value, latest_date, label
+
+
+    onrrp_val, onrrp_date, onrrp_label = extract_latest(onrrp_data)
+    effr_val, effr_date, effr_label = extract_latest(effr_data)
+    iorb_val, iorb_date, iorb_label = extract_latest(iorb_data)
+    sofr_val, sofr_date, sofr_label = extract_latest(sofr_data)
+    srf_val, srf_date, srf_label = extract_latest(srf_data)
 
     def extract_last_30_days(json_data, col_name):
         rows = []
@@ -72,10 +103,12 @@ def collect_FRED_data():
     png_bytes = pio.to_image(fig, format="png")
 
     return (
-        onrrp_today,
-        effr_today,
-        iorb_today,
-        sofr_today,
-        srf_today,
-        png_bytes
+        onrrp_val,
+        effr_val,
+        iorb_val,
+        sofr_val,
+        srf_val,
+        png_bytes,
+        effr_date,
+        effr_label,
     )
