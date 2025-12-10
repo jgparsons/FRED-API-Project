@@ -1,5 +1,6 @@
 from unittest.mock import patch
-from app.send_emails import send_email
+
+from app.send_emails import send_email, unsubscribe_email
 
 
 @patch("app.send_emails.requests.post")
@@ -20,7 +21,7 @@ def test_send_email_success(mock_post):
         sofr_today=5.3,
         srf_today=5.4,
         png_bytes=fake_png,
-        subject="Test Email"
+        subject="Test Email",
     )
 
     # Assert — ensure a POST request was made exactly once
@@ -41,3 +42,30 @@ def test_send_email_success(mock_post):
     # Assert inline image is passed correctly
     assert "inline" in kwargs["files"]
 
+
+@patch("app.send_emails.requests.post")
+def test_unsubscribe_email_success(mock_post):
+    """
+    unsubscribe_email should return True when Mailgun responds successfully.
+    """
+    mock_post.return_value.status_code = 200
+    mock_post.return_value.raise_for_status.return_value = None
+
+    result = unsubscribe_email("test@example.com")
+
+    assert result is True
+    mock_post.assert_called_once()
+
+
+@patch("app.send_emails.requests.post")
+def test_unsubscribe_email_failure(mock_post):
+    """
+    unsubscribe_email should return False when Mailgun raises an error.
+    """
+    mock_post.return_value.status_code = 400
+    mock_post.return_value.raise_for_status.side_effect = Exception("API error")
+
+    result = unsubscribe_email("test@example.com")
+
+    assert result is False
+    mock_post.assert_called_once()

@@ -59,3 +59,30 @@ def send_email(
 
     except requests.exceptions.RequestException as e:
         print(f"Error sending email: {str(e)}")
+
+#adding unsubscribe ability?
+
+def unsubscribe_email(recipient_address):
+    """
+    Remove an email from future mailings via Mailgun's unsubscribe endpoint.
+
+    Returns:
+        True  if the API call succeeds,
+        False if there is any error.
+    """
+    try:
+        request_url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/unsubscribes"
+
+        response = requests.post(
+            request_url,
+            auth=("api", MAILGUN_API_KEY),
+            data={"address": recipient_address},
+        )
+
+        print("UNSUBSCRIBE RESULT:", response.status_code)
+        response.raise_for_status()
+        return True
+
+    except Exception as e:  # catch generic Exception so the test's side_effect works
+        print(f"Error unsubscribing: {e}")
+        return False
