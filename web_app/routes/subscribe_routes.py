@@ -1,8 +1,8 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-
+import requests
 from app.collect_FRED_data import collect_FRED_data
-from app.send_emails import send_email
+from app.send_emails import send_email, subscribe_email
 
 subscribe_routes = Blueprint("subscribe_routes", __name__)
 
@@ -16,6 +16,9 @@ def subscribe():
             return redirect(url_for("subscribe_routes.subscribe"))
 
         try:
+
+            subscribe_email(email)
+
             (
                 onrrp_today,
                 effr_today,
@@ -23,8 +26,6 @@ def subscribe():
                 sofr_today,
                 srf_today,
                 png_bytes,
-                _effr_date,
-                _effr_label,
             ) = collect_FRED_data()
 
 

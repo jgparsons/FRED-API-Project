@@ -20,7 +20,7 @@ srf_url = f"https://api.stlouisfed.org/fred/series/observations?series_id=SRFTSY
 
 def collect_FRED_data():
     today = datetime.date.today()
-    today_minus_30 = today - datetime.timedelta(days=30)
+    yesterday = today - datetime.timedelta(days=1)
 
     onrrp_data = requests.get(onrrp_url).json()
     effr_data = requests.get(effr_url).json()
@@ -29,18 +29,8 @@ def collect_FRED_data():
     srf_data = requests.get(srf_url).json()
 
     def extract_latest(json_data):
-        """
-        Return (latest_value, latest_date, label_string)
-
-        latest_date is the most recent date in the observations
-        with a non-missing value.
-
-        label_string is:
-          - "Today's value" if latest_date == today
-          - "Latest value" otherwise
-        """
         latest_value = None
-        latest_date = None  
+        latest_date = None
 
         for obs in json_data["observations"]:
             if obs["value"] == ".":
@@ -54,16 +44,11 @@ def collect_FRED_data():
             latest_value = value
             latest_date = date_obj
 
-        if latest_value is None or latest_date is None:
+        if latest_value is None:
             return None, None, None
 
-        if latest_date == today:
-            label = "Today's value"
-        else:
-            label = "Latest value"
-
+        label = "Today's value" if latest_date == today else "Latest value"
         return latest_value, latest_date, label
-
 
     onrrp_val, onrrp_date, onrrp_label = extract_latest(onrrp_data)
     effr_val, effr_date, effr_label = extract_latest(effr_data)
@@ -73,11 +58,16 @@ def collect_FRED_data():
 
     def extract_last_30_days(json_data, col_name):
         rows = []
+        thirty_days_ago = today - datetime.timedelta(days=30)
+
         for obs in json_data["observations"]:
             date = datetime.datetime.strptime(obs["date"], "%Y-%m-%d").date()
-            if date >= today_minus_30:
+
+            # Keep last 30 days but exclude today
+            if thirty_days_ago <= date < today:
                 value = float(obs["value"]) if obs["value"] != "." else None
-                rows.append({"date": date, col_name: value})
+                rows.append({"date": date, [col_name]: value})
+
         df = pd.DataFrame(rows)
         return df.set_index("date")
 
@@ -93,7 +83,6 @@ def collect_FRED_data():
     df_all = df_all.dropna(thresh=len(df_all.columns) - 1)
 
     fig = px.line(df_all)
-
     fig.update_layout(
         xaxis_title="Date",
         yaxis_title="Rate (%)",
