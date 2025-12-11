@@ -99,7 +99,7 @@ def collect_FRED_data():
         legend_title="Series",
     )
 
-    svg_text = fig.to_svg()              # <-- NO KALEIDO REQUIRED
+    svg_bytes = fig.to_image(format="svg")
     svg_bytes = svg_text.encode("utf-8") # bytes for email attachment
 
     return (
