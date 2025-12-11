@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import app.collect_FRED_data
 import app.send_emails
 
+print("DEBUG: RUNNING web_app factory app")
+
 load_dotenv()
 
 def create_app():

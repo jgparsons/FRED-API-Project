@@ -5,6 +5,8 @@ import datetime
 
 MAILING_LIST = os.getenv("MAILING_LIST")
 
+print("DEBUG: RUNNING app/main.py APP")
+
 def main():
     today = datetime.date.today()
     if today.datetime.weekday < 5:
