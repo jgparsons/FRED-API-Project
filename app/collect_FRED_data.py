@@ -66,7 +66,7 @@ def collect_FRED_data():
             # Keep last 30 days but exclude today
             if thirty_days_ago <= date < today:
                 value = float(obs["value"]) if obs["value"] != "." else None
-                rows.append({"date": date, [col_name]: value})
+                rows.append({"date": date, col_name: value})
 
         df = pd.DataFrame(rows)
         return df.set_index("date")
