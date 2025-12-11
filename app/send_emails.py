@@ -64,6 +64,38 @@ def send_email(
     except Exception as e:
         print(f"Error sending email: {e}")
 
+# ---------------------------------------------------------
+#  SUBSCRIBE A USER TO THE MAILGUN MAILING LIST
+# ---------------------------------------------------------
+def subscribe_email(email_address):
+    """
+    Add a user to the configured Mailgun mailing list.
+
+    Returns:
+        True   -> subscription successful
+        False  -> any error occurred
+    """
+    try:
+        url = f"https://api.mailgun.net/v3/lists/{MAILING_LIST}/members"
+
+        payload = {
+            "address": email_address,
+            "subscribed": True,
+            "upsert": True,      # avoids duplicates; updates if already exists
+        }
+
+        response = requests.post(
+            url,
+            auth=("api", MAILGUN_API_KEY),
+            data=payload,
+        )
+
+        response.raise_for_status()
+        return True
+
+    except Exception as e:
+        print(f"Error subscribing email '{email_address}': {e}")
+        return False
 
 # ---------------------------------------------------------
 #  UNSUBSCRIBE A USER
