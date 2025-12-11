@@ -3,6 +3,8 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
+import app.collect_FRED_data
+import app.send_emails
 
 load_dotenv()
 
