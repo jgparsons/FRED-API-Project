@@ -1,9 +1,9 @@
+# app/collect_FRED_data.py
+
 import os
 import requests
 import datetime
 import pandas as pd
-import plotly.express as px
-import plotly.io as pio
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,6 +19,7 @@ srf_url = f"https://api.stlouisfed.org/fred/series/observations?series_id=SRFTSY
 
 
 def collect_FRED_data():
+    """Return latest values plus 30-day history for charting (no images)."""
 
     print("DEBUG_FRED_KEY:", repr(os.getenv("FRED_API_KEY")))
 
@@ -88,16 +89,11 @@ def collect_FRED_data():
     df_all = df_all.sort_index()
     df_all = df_all.dropna(thresh=len(df_all.columns) - 1)
 
-    # --- Create SVG graph (NO kaleido needed) ---
-    fig = px.line(df_all)
-    fig.update_layout(
-        xaxis_title="Date",
-        yaxis_title="Rate (%)",
-        legend_title="Series",
-    )
-
-    # Export to SVG (works anywhere — Render, GitHub, local)
-    svg_bytes = fig.to_image(format="svg")
+    # Turn into JSON-serializable dict for frontend Plotly
+    df_for_chart = df_all.reset_index()
+    df_for_chart["date"] = df_for_chart["date"].dt.strftime("%Y-%m-%d")
+    chart_data = df_for_chart.to_dict(orient="list")
+    # chart_data keys: ["date", "ON_RRP", "EFFR", "IORB", "SOFR", "SRF"]
 
     return (
         onrrp_val,
@@ -105,7 +101,7 @@ def collect_FRED_data():
         iorb_val,
         sofr_val,
         srf_val,
-        svg_bytes,     # byte string for emails/dashboard
+        chart_data,   # <-- instead of image bytes
         effr_date,
         effr_label,
     )
