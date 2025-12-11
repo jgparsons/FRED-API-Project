@@ -15,14 +15,12 @@
       <div class="card-body">
         <h5 class="card-title mb-3">Today’s values</h5>
 
-        {# If effr_label != "Today's value", we treat today's values as unavailable #}
         {% set show_today = (effr_label == "Today's value") %}
 
         <ul class="list-unstyled text-muted mb-0">
-          <li class="mb-1">
-            <strong>ON RRP:</strong>
+          <li class="mb-1"><strong>ON RRP:</strong>
             {% if show_today %}
-              {{ onrrp_today if onrrp_today is not none else "N/A" }}
+              {{ onrrp_today or "N/A" }}
             {% else %}
               {% if onrrp_today is not none %}
                 N/A (Latest = {{ onrrp_today }})
@@ -32,10 +30,9 @@
             {% endif %}
           </li>
 
-          <li class="mb-1">
-            <strong>EFFR:</strong>
+          <li class="mb-1"><strong>EFFR:</strong>
             {% if show_today %}
-              {{ effr_today if effr_today is not none else "N/A" }}
+              {{ effr_today or "N/A" }}
             {% else %}
               {% if effr_today is not none %}
                 N/A (Latest = {{ effr_today }})
@@ -45,10 +42,9 @@
             {% endif %}
           </li>
 
-          <li class="mb-1">
-            <strong>IORB:</strong>
+          <li class="mb-1"><strong>IORB:</strong>
             {% if show_today %}
-              {{ iorb_today if iorb_today is not none else "N/A" }}
+              {{ iorb_today or "N/A" }}
             {% else %}
               {% if iorb_today is not none %}
                 N/A (Latest = {{ iorb_today }})
@@ -58,10 +54,9 @@
             {% endif %}
           </li>
 
-          <li class="mb-1">
-            <strong>SOFR:</strong>
+          <li class="mb-1"><strong>SOFR:</strong>
             {% if show_today %}
-              {{ sofr_today if sofr_today is not none else "N/A" }}
+              {{ sofr_today or "N/A" }}
             {% else %}
               {% if sofr_today is not none %}
                 N/A (Latest = {{ sofr_today }})
@@ -71,10 +66,9 @@
             {% endif %}
           </li>
 
-          <li>
-            <strong>SRF:</strong>
+          <li><strong>SRF:</strong>
             {% if show_today %}
-              {{ srf_today if srf_today is not none else "N/A" }}
+              {{ srf_today or "N/A" }}
             {% else %}
               {% if srf_today is not none %}
                 N/A (Latest = {{ srf_today }})
@@ -97,16 +91,48 @@
     <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title mb-3">30-day history</h5>
-        {% if chart_base64 %}
-          <img src="data:image/svg+xml;base64,{{ chart_base64 }}" />
+
+        {% if chart_data %}
+          <div id="chart" style="height: 400px;"></div>
         {% else %}
           <p class="text-muted mb-0">
-            Chart unavailable at the moment. Try reloading, or check that the FRED API key is set.
+            Chart unavailable at the moment. Check that your FRED API key is set.
           </p>
         {% endif %}
+
       </div>
     </div>
   </div>
 </div>
+
+{% if chart_data %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+  const chartData = {{ chart_data | tojson | safe }};
+
+  // Construct Plotly traces
+  const dates = chartData.date;
+  const seriesNames = ["ON_RRP", "EFFR", "IORB", "SOFR", "SRF"];
+  const traces = [];
+
+  for (const key of seriesNames) {
+    if (chartData[key]) {
+      traces.push({
+        x: dates,
+        y: chartData[key],
+        mode: "lines",
+        name: key
+      });
+    }
+  }
+
+  Plotly.newPlot("chart", traces, {
+    xaxis: { title: "Date" },
+    yaxis: { title: "Rate (%)" },
+    legend: { title: { text: "Series" } },
+    margin: { t: 20 }
+  });
+</script>
+{% endif %}
 
 {% endblock %}

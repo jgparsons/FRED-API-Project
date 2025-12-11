@@ -10,7 +10,7 @@ MAILING_LIST = os.getenv("MAILING_LIST")
 
 
 # -------------------------
-# SEND EMAIL TO ONE USER
+# SEND EMAIL TO ONE USER (NO IMAGE)
 # -------------------------
 def send_email(
     *,
@@ -20,9 +20,13 @@ def send_email(
     iorb_today,
     sofr_today,
     srf_today,
-    svg_bytes,
     subject="Fed Email",
 ):
+    """
+    Send a Fed rate email with yesterday's values to a single recipient.
+    No chart image is attached.
+    """
+
     html_content = f"""
         <p>Thank you for signing up to receive these fun and interesting emails.</p>
         <p>Here are yesterday's rates:</p>
@@ -33,7 +37,6 @@ def send_email(
             <li>SOFR: {sofr_today}</li>
             <li>SRF: {srf_today}</li>
         </ul>
-        <img src="cid:chart.svg" alt="Fed Chart" />
         <p>Thank you!</p>
     """
 
@@ -50,9 +53,7 @@ def send_email(
         url,
         auth=("api", MAILGUN_API_KEY),
         data=message_data,
-        files={"inline": ("chart.svg", svg_bytes)},
     )
-
     response.raise_for_status()
     print("Email sent successfully!")
 
@@ -95,7 +96,7 @@ def unsubscribe_email(recipient_address):
 
 
 # -------------------------
-# SEND TO MAILING LIST
+# SEND EMAIL TO ENTIRE MAILING LIST (NO IMAGE)
 # -------------------------
 def send_email_to_list(
     *,
@@ -105,7 +106,6 @@ def send_email_to_list(
     iorb_today,
     sofr_today,
     srf_today,
-    svg_bytes,
     subject="Fed Email",
 ):
 
@@ -118,7 +118,6 @@ def send_email_to_list(
             <li>SOFR: {sofr_today}</li>
             <li>SRF: {srf_today}</li>
         </ul>
-        <img src="cid:chart.svg" alt="Fed Chart" />
     """
 
     url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages"
@@ -132,8 +131,6 @@ def send_email_to_list(
             "subject": subject,
             "html": html_content,
         },
-        files={"inline": ("chart.svg", svg_bytes)},
     )
-
     response.raise_for_status()
     print("Sent email to mailing list.")

@@ -1,3 +1,5 @@
+# test/collect_FRED_data_test.py
+
 from unittest.mock import patch
 import datetime
 
@@ -18,7 +20,7 @@ def test_collect_fred_data_uses_latest_value_when_today_missing(mock_get):
 
     data = collect_FRED_data()
 
-    # New structure: 5 values + svg_bytes + effr_date + effr_label
+    # Structure: 5 values + chart_data + effr_date + effr_label
     assert len(data) == 8
 
     (
@@ -27,26 +29,26 @@ def test_collect_fred_data_uses_latest_value_when_today_missing(mock_get):
         iorb_val,
         sofr_val,
         srf_val,
-        svg_bytes,
+        chart_data,
         effr_date,
         effr_label,
     ) = data
 
-    # Last observation in FAKE_RESPONSE has value 5.00,
-    # so each series should use that as its "latest" value.
+    # Last observation in FAKE_RESPONSE has value 5.00
     assert onrrp_val == 5.00
     assert effr_val == 5.00
     assert iorb_val == 5.00
     assert sofr_val == 5.00
     assert srf_val == 5.00
 
-    # Ensure we received SVG bytes instead of PNG
-    assert isinstance(svg_bytes, (bytes, bytearray))
-    assert svg_bytes.startswith(b"<svg") or b"<svg" in svg_bytes
+    # chart_data should be a dict with expected keys
+    assert isinstance(chart_data, dict)
+    for key in ["date", "ON_RRP", "EFFR", "IORB", "SOFR", "SRF"]:
+        assert key in chart_data
 
-    # The date should be parsed into a date object
+    # Date parsed correctly
     assert isinstance(effr_date, datetime.date)
     assert effr_date == datetime.date(2025, 12, 3)
 
-    # Because that date is not "today", the label should be "Latest value"
+    # Since fake date is not "today", label is Latest value
     assert effr_label == "Latest value"
