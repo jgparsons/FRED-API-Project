@@ -98,11 +98,7 @@
       <div class="card-body">
         <h5 class="card-title mb-3">30-day history</h5>
         {% if chart_base64 %}
-          <img
-            class="img-fluid rounded"
-            src="data:image/png;base64,{{ chart_base64 }}"
-            alt="Fed rate chart for last 30 days"
-          >
+          <img src="data:image/svg+xml;base64,{{ chart_base64 }}" />
         {% else %}
           <p class="text-muted mb-0">
             Chart unavailable at the moment. Try reloading, or check that the FRED API key is set.

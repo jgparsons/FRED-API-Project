@@ -92,7 +92,7 @@ def collect_FRED_data():
         legend_title="Series",
     )
 
-    png_bytes = pio.to_image(fig, format="png")
+    svg_bytes = pio.to_image(fig, format="svg")
 
     return (
         onrrp_val,
@@ -100,7 +100,7 @@ def collect_FRED_data():
         iorb_val,
         sofr_val,
         srf_val,
-        png_bytes,
+        svg_bytes,
         effr_date,
         effr_label,
     )

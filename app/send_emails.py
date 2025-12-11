@@ -18,7 +18,7 @@ def send_email(
     iorb_today,
     sofr_today,
     srf_today,
-    png_bytes,
+    svg_bytes,
     subject="Fed Email"
 ):
     """
@@ -36,7 +36,7 @@ def send_email(
             <li>SOFR: {sofr_today}</li>
             <li>SRF: {srf_today}</li>
         </ul>
-        <img src="cid:chart.png" alt="Fed Chart" />
+        <img src="cid:chart.svg" alt="Fed Chart" />
         <p>Thank you!</p>
     """
 
@@ -54,7 +54,7 @@ def send_email(
             request_url,
             auth=("api", MAILGUN_API_KEY),
             data=message_data,
-            files={"inline": ("chart.png", png_bytes)},
+            files={"inline": ("chart.svg", svg_bytes)},
         )
 
         print("RESULT:", response.status_code)
@@ -132,7 +132,7 @@ def send_email_to_list(
     iorb_today,
     sofr_today,
     srf_today,
-    png_bytes,
+    svg_bytes,
     subject="Fed Email"
 ):
     """
@@ -149,7 +149,7 @@ def send_email_to_list(
             <li>SOFR: {sofr_today}</li>
             <li>SRF: {srf_today}</li>
         </ul>
-        <img src="cid:chart.png" alt="Fed Chart" />
+        <img src="cid:chart.svg" alt="Fed Chart" />
         <p>Thank you!</p>
     """
 
@@ -167,7 +167,7 @@ def send_email_to_list(
             request_url,
             auth=("api", MAILGUN_API_KEY),
             data=message_data,
-            files={"inline": ("chart.png", png_bytes)},
+            files={"inline": ("chart.svg", svg_bytes)},
         )
 
         print("RESULT:", response.status_code)

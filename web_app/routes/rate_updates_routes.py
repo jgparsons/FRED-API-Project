@@ -13,7 +13,7 @@ def rate_updates():
     Rates page:
     - Calls collect_FRED_data()
     - Shows today's/latest values for each rate
-    - Embeds the PNG chart returned by collect_FRED_data()
+    - Embeds the svg chart returned by collect_FRED_data()
     """
     
     try:
@@ -23,12 +23,12 @@ def rate_updates():
             iorb_val,
             sofr_val,
             srf_val,
-            png_bytes,
+            svg_bytes,
             _effr_date,   # unused here, but returned by the function
             _effr_label,  # unused here
         ) = collect_FRED_data()
 
-        chart_base64 = base64.b64encode(png_bytes).decode("utf-8")
+        chart_base64 = base64.b64encode(svg_bytes).decode("utf-8")
 
     except Exception as e:
         print("Error collecting FRED data for /rate_updates:", e)
