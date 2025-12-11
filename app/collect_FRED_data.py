@@ -19,6 +19,9 @@ srf_url = f"https://api.stlouisfed.org/fred/series/observations?series_id=SRFTSY
 
 
 def collect_FRED_data():
+
+    print("DEBUG_FRED_KEY:", repr(os.getenv("FRED_API_KEY")))
+    
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
 
