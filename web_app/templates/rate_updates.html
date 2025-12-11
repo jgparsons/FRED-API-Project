@@ -93,7 +93,7 @@
         <h5 class="card-title mb-3">30-day history</h5>
 
         {% if chart_data %}
-          <div id="chart" style="height: 400px;"></div>
+          <div id="chart" style="width:100%; height:420px;"></div>
         {% else %}
           <p class="text-muted mb-0">
             Chart unavailable at the moment. Check that your FRED API key is set.
@@ -107,31 +107,63 @@
 
 {% if chart_data %}
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 <script>
-  const chartData = {{ chart_data | tojson | safe }};
+document.addEventListener("DOMContentLoaded", function () {
 
-  // Construct Plotly traces
+  const chartData = {{ chart_data | tojson }};
   const dates = chartData.date;
-  const seriesNames = ["ON_RRP", "EFFR", "IORB", "SOFR", "SRF"];
-  const traces = [];
 
-  for (const key of seriesNames) {
-    if (chartData[key]) {
-      traces.push({
-        x: dates,
-        y: chartData[key],
-        mode: "lines",
-        name: key
-      });
+  // Colors chosen to match your dark UI theme
+  const series = [
+    { name: "ON_RRP", color: "#53a3ff" },
+    { name: "EFFR",   color: "#ff6b6b" },
+    { name: "IORB",   color: "#feca57" },
+    { name: "SOFR",   color: "#1dd1a1" },
+    { name: "SRF",    color: "#9b59b6" }
+  ];
+
+  const traces = series.map(s => ({
+    x: dates,
+    y: chartData[s.name],
+    mode: "lines",
+    name: s.name,
+    line: {
+      color: s.color,
+      width: 2.5
     }
-  }
+  }));
 
-  Plotly.newPlot("chart", traces, {
-    xaxis: { title: "Date" },
-    yaxis: { title: "Rate (%)" },
-    legend: { title: { text: "Series" } },
-    margin: { t: 20 }
-  });
+  const layout = {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    font: {
+      family: "Inter, system-ui, sans-serif",
+      color: "white",
+      size: 14
+    },
+    margin: { t: 40, r: 30, l: 60, b: 50 },
+    xaxis: {
+      title: "Date",
+      color: "white",
+      gridcolor: "rgba(255,255,255,0.05)",
+      zerolinecolor: "rgba(255,255,255,0.1)",
+    },
+    yaxis: {
+      title: "Rate (%)",
+      color: "white",
+      gridcolor: "rgba(255,255,255,0.05)",
+      zerolinecolor: "rgba(255,255,255,0.1)",
+    },
+    legend: {
+      x: 1.05,
+      y: 1,
+      font: { color: "white" }
+    }
+  };
+
+  Plotly.newPlot("chart", traces, layout, { responsive: true });
+});
 </script>
 {% endif %}
 
