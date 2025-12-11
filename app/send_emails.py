@@ -78,21 +78,36 @@ def subscribe_email(email_address):
 # -------------------------
 # UNSUBSCRIBE FROM MAILING LIST
 # -------------------------
-def unsubscribe_email(recipient_address):
-
-    url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/unsubscribes"
-
+def unsubscribe_email(email_address):
     try:
-        response = requests.post(
-            url,
-            auth=("api", MAILGUN_API_KEY),
-            data={"address": recipient_address},
+        # -------- STEP 1: Remove from mailing list --------
+        list_url = f"https://api.mailgun.net/v3/lists/{MAILING_LIST}/members/{email_address}"
+
+        delete_resp = requests.delete(
+            list_url,
+            auth=("api", MAILGUN_API_KEY)
         )
-        response.raise_for_status()
+
+        # If the user didn't exist in the list, Mailgun returns 404.
+        # That is okay. They are effectively unsubscribed.
+        if delete_resp.status_code not in (200, 204, 404):
+            delete_resp.raise_for_status()
+
+        # -------- STEP 2 (optional but recommended): add to unsubscribes --------
+        unsub_url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/unsubscribes"
+
+        requests.post(
+            unsub_url,
+            auth=("api", MAILGUN_API_KEY),
+            data={"address": email_address},
+        )
+
         return True
+
     except Exception as e:
         print("Error unsubscribing:", e)
         return False
+
 
 
 # -------------------------
