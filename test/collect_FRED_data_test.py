@@ -18,7 +18,7 @@ def test_collect_fred_data_uses_latest_value_when_today_missing(mock_get):
 
     data = collect_FRED_data()
 
-    # New structure: 5 values + png_bytes + effr_date + effr_label
+    # New structure: 5 values + svg_bytes + effr_date + effr_label
     assert len(data) == 8
 
     (
@@ -27,7 +27,7 @@ def test_collect_fred_data_uses_latest_value_when_today_missing(mock_get):
         iorb_val,
         sofr_val,
         srf_val,
-        png_bytes,
+        svg_bytes,
         effr_date,
         effr_label,
     ) = data
@@ -40,12 +40,13 @@ def test_collect_fred_data_uses_latest_value_when_today_missing(mock_get):
     assert sofr_val == 5.00
     assert srf_val == 5.00
 
-    # We should still get some image bytes back
-    assert isinstance(png_bytes, (bytes, bytearray))
+    # Ensure we received SVG bytes instead of PNG
+    assert isinstance(svg_bytes, (bytes, bytearray))
+    assert svg_bytes.startswith(b"<svg") or b"<svg" in svg_bytes
 
     # The date should be parsed into a date object
     assert isinstance(effr_date, datetime.date)
     assert effr_date == datetime.date(2025, 12, 3)
 
-    # Because that date is not "today" in real life, label should be "Latest value"
+    # Because that date is not "today", the label should be "Latest value"
     assert effr_label == "Latest value"
