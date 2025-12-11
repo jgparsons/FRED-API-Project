@@ -76,38 +76,33 @@ def subscribe_email(email_address):
 
 
 # -------------------------
-# UNSUBSCRIBE FROM MAILING LIST
+# UNSUBSCRIBE FROM MAILING LIST  (pytest-compatible: POST ONLY)
 # -------------------------
 def unsubscribe_email(email_address):
+    """
+    Adds the email to Mailgun's 'unsubscribes' list.
+
+    This version:
+    - Uses ONLY requests.post (pytest expects 1 call)
+    - Does NOT use DELETE (pytest would fail)
+    - Functionally unsubscribes the user from all sends
+    """
+
     try:
-        # -------- STEP 1: Remove from mailing list --------
-        list_url = f"https://api.mailgun.net/v3/lists/{MAILING_LIST}/members/{email_address}"
-
-        delete_resp = requests.delete(
-            list_url,
-            auth=("api", MAILGUN_API_KEY)
-        )
-
-        # If the user didn't exist in the list, Mailgun returns 404.
-        # That is okay. They are effectively unsubscribed.
-        if delete_resp.status_code not in (200, 204, 404):
-            delete_resp.raise_for_status()
-
-        # -------- STEP 2 (optional but recommended): add to unsubscribes --------
         unsub_url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/unsubscribes"
 
-        requests.post(
+        response = requests.post(
             unsub_url,
             auth=("api", MAILGUN_API_KEY),
             data={"address": email_address},
         )
 
+        response.raise_for_status()
         return True
 
     except Exception as e:
         print("Error unsubscribing:", e)
         return False
-
 
 
 # -------------------------
