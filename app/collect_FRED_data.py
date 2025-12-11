@@ -1,3 +1,4 @@
+import kaleido
 import os
 import requests
 import datetime
