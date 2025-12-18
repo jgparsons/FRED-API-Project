@@ -25,14 +25,13 @@ def collect_FRED_data():
 
     today = datetime.date.today()
 
-    # --- Fetch JSON from FRED ---
+    # Fetch JSON from FRED
     onrrp_data = requests.get(onrrp_url).json()
     effr_data = requests.get(effr_url).json()
     iorb_data = requests.get(iorb_url).json()
     sofr_data = requests.get(sofr_url).json()
     srf_data = requests.get(srf_url).json()
 
-    # --- Helper: extract the latest non-missing value ---
     def extract_latest(json_data):
         latest_value = None
         latest_date = None
@@ -62,7 +61,6 @@ def collect_FRED_data():
     sofr_val, _, _ = extract_latest(sofr_data)
     srf_val, _, _ = extract_latest(srf_data)
 
-    # --- Helper: extract last 30 days (excluding today) ---
     def extract_last_30_days(json_data, col_name):
         rows = []
         thirty_days_ago = today - datetime.timedelta(days=30)
@@ -101,7 +99,7 @@ def collect_FRED_data():
         iorb_val,
         sofr_val,
         srf_val,
-        chart_data,   # <-- instead of image bytes
+        chart_data,
         effr_date,
         effr_label,
     )

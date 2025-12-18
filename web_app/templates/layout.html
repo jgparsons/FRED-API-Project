@@ -20,16 +20,16 @@
 
     <style>
       body {
-        background-color: #0a102c;  
-        color: #f9fafb;             
+        background-color: #0a102c;
+        color: #f9fafb;
       }
 
       * {
         color: inherit;
-        }
+      }
 
       .navbar {
-        background-color: #1a2642;  
+        background-color: #1a2642;
       }
 
       .navbar-brand,
@@ -43,13 +43,13 @@
       }
 
       .page-container {
-        margin-top: 80px;
+        margin-top: 80px;   /* clears fixed navbar */
         margin-bottom: 40px;
       }
 
       .card {
-        background-color: #0a102c;               
-        border: 1px solid #1a2642;               
+        background-color: #0a102c;
+        border: 1px solid #1a2642;
         border-radius: 0.6rem;
       }
 
@@ -63,7 +63,7 @@
       }
 
       .text-muted {
-        color: #c6dcf6 !important;   
+        color: #c6dcf6 !important;
       }
 
       footer {
@@ -72,20 +72,6 @@
     </style>
 </head>
 <body>
-
-    {# FLASH MESSAGES #}
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="container mt-3">
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
 
     {# NAVBAR LINKS #}
     {% set nav_links = [
@@ -98,6 +84,7 @@
     ] -%}
     {% set active_page = active_page|default('home') -%}
 
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="/">
@@ -124,6 +111,26 @@
       </div>
     </nav>
 
+    <!-- FLASH MESSAGES (now correctly below navbar) -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="container page-container">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- PAGE CONTENT -->
     <div class="container page-container">
       {% block content %}{% endblock %}
     </div>

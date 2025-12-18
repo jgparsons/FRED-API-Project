@@ -1,5 +1,7 @@
 # test/collect_FRED_data_test.py
 
+#made with help from ChatGPT because we didn't know how to make a test for this
+
 from unittest.mock import patch
 import datetime
 

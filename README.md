@@ -1,5 +1,9 @@
 # FRED-API-Project
 
+## Website
+
+Can be found online at: https://fred-api-project.onrender.com/
+
 ## Setup
 
 ### Virtual Environment
@@ -16,19 +20,10 @@ conda activate FRED-env
 Install packages:
 
 ```sh
-# pip install pytest
 pip install -r requirements.txt
 ```
 
-## Usage
-
-```sh
-python -m app.collect_FRED_data
-```
-
-### Web App
-
-Run the web app (then view in the browser at http://localhost:5000/):
+### Run Web App Locally
 
 ```sh
 # Mac OS:
@@ -45,6 +40,5 @@ flask run
 
 Run the tests:
 ```sh
-# find all the tests and run them:
 pytest
 ```
