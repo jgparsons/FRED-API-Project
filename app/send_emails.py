@@ -28,34 +28,83 @@ def send_email(
     """
 
     html_content = f"""
-        <p>Thank you for signing up to receive these fun and interesting emails.</p>
-        <p>Here are yesterday's rates:</p>
-        <ul>
-            <li>ON_RRP: {onrrp_today}</li>
-            <li>EFFR: {effr_today}</li>
-            <li>IORB: {iorb_today}</li>
-            <li>SOFR: {sofr_today}</li>
-            <li>SRF: {srf_today}</li>
-        </ul>
-        <p>Thank you!</p>
+    <html>
+    <body style="
+        margin:0;
+        padding:0;
+        background-color:#0a102c;
+        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+        color:#f9fafb;
+    ">
+      <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 0;">
+        <tr>
+          <td align="center">
+            <table width="520" cellpadding="0" cellspacing="0" style="
+              background-color:#0b1536;
+              border:1px solid #1a2642;
+              border-radius:10px;
+              padding:28px;
+            ">
+              <tr>
+                <td style="padding-bottom:18px;">
+                  <h2 style="margin:0;color:#e5e7eb;">📈 Fed Rate Watch</h2>
+                  <p style="margin:6px 0 0;color:#c6dcf6;font-size:14px;">
+                    Yesterday’s published rates
+                  </p>
+                </td>
+              </tr>
+
+              <tr><td>{rate_row("ON RRP", onrrp_today)}</td></tr>
+              <tr><td>{rate_row("EFFR", effr_today)}</td></tr>
+              <tr><td>{rate_row("IORB", iorb_today)}</td></tr>
+              <tr><td>{rate_row("SOFR", sofr_today)}</td></tr>
+              <tr><td>{rate_row("SRF", srf_today)}</td></tr>
+
+              <tr>
+                <td style="padding-top:22px;font-size:13px;color:#9ca3af;">
+                  You’re receiving this because you subscribed to Fed Rate Watch.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
     """
 
     url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages"
 
-    message_data = {
-        "from": MAILGUN_SENDER_ADDRESS,
-        "to": recipient_address,
-        "subject": subject,
-        "html": html_content,
-    }
-
     response = requests.post(
         url,
         auth=("api", MAILGUN_API_KEY),
-        data=message_data,
+        data={
+            "from": MAILGUN_SENDER_ADDRESS,
+            "to": recipient_address,
+            "subject": subject,
+            "html": html_content,
+        },
     )
     response.raise_for_status()
     print("Email sent successfully!")
+
+
+def rate_row(label, value):
+    return f"""
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+      <tr>
+        <td style="padding:10px 0;color:#c6dcf6;font-size:14px;">
+          {label}
+        </td>
+        <td align="right" style="padding:10px 0;color:#f9fafb;font-weight:600;">
+          {value}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="border-bottom:1px solid #1a2642;"></td>
+      </tr>
+    </table>
+    """
 
 
 # -------------------------
@@ -76,18 +125,9 @@ def subscribe_email(email_address):
 
 
 # -------------------------
-# UNSUBSCRIBE FROM MAILING LIST  (pytest-compatible: POST ONLY)
+# UNSUBSCRIBE FROM MAILING LIST
 # -------------------------
 def unsubscribe_email(email_address):
-    """
-    Adds the email to Mailgun's 'unsubscribes' list.
-
-    This version:
-    - Uses ONLY requests.post (pytest expects 1 call)
-    - Does NOT use DELETE (pytest would fail)
-    - Functionally unsubscribes the user from all sends
-    """
-
     try:
         unsub_url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/unsubscribes"
 
@@ -120,14 +160,44 @@ def send_email_to_list(
 ):
 
     html_content = f"""
-        <p>Here are yesterday's rates:</p>
-        <ul>
-            <li>ON_RRP: {onrrp_today}</li>
-            <li>EFFR: {effr_today}</li>
-            <li>IORB: {iorb_today}</li>
-            <li>SOFR: {sofr_today}</li>
-            <li>SRF: {srf_today}</li>
-        </ul>
+    <html>
+    <body style="
+        margin:0;
+        padding:0;
+        background-color:#0a102c;
+        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+        color:#f9fafb;
+    ">
+      <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 0;">
+        <tr>
+          <td align="center">
+            <table width="520" cellpadding="0" cellspacing="0" style="
+              background-color:#0b1536;
+              border:1px solid #1a2642;
+              border-radius:10px;
+              padding:28px;
+            ">
+              <tr>
+                <td style="padding-bottom:18px;">
+                  <h2 style="margin:0;color:#e5e7eb;">📈 Fed Rate Watch</h2>
+                  <p style="margin:6px 0 0;color:#c6dcf6;font-size:14px;">
+                    Yesterday’s published rates
+                  </p>
+                </td>
+              </tr>
+
+              <tr><td>{rate_row("ON RRP", onrrp_today)}</td></tr>
+              <tr><td>{rate_row("EFFR", effr_today)}</td></tr>
+              <tr><td>{rate_row("IORB", iorb_today)}</td></tr>
+              <tr><td>{rate_row("SOFR", sofr_today)}</td></tr>
+              <tr><td>{rate_row("SRF", srf_today)}</td></tr>
+
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
     """
 
     url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages"

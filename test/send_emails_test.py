@@ -1,5 +1,7 @@
 # test/send_emails_test.py
 
+#made with help from ChatGPT because we didn't know how to make a test for this
+
 from unittest.mock import patch
 from app.send_emails import send_email, unsubscribe_email
 

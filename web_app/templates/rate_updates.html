@@ -18,65 +18,27 @@
         {% set show_today = (effr_label == "Today's value") %}
 
         <ul class="list-unstyled text-muted mb-0">
+
           <li class="mb-1"><strong>ON RRP:</strong>
-            {% if show_today %}
-              {{ onrrp_today or "N/A" }}
-            {% else %}
-              {% if onrrp_today is not none %}
-                N/A (Latest = {{ onrrp_today }})
-              {% else %}
-                N/A
-              {% endif %}
-            {% endif %}
+            {{ onrrp_today }}
           </li>
 
           <li class="mb-1"><strong>EFFR:</strong>
-            {% if show_today %}
-              {{ effr_today or "N/A" }}
-            {% else %}
-              {% if effr_today is not none %}
-                N/A (Latest = {{ effr_today }})
-              {% else %}
-                N/A
-              {% endif %}
-            {% endif %}
+            {{ effr_today }}
           </li>
 
           <li class="mb-1"><strong>IORB:</strong>
-            {% if show_today %}
-              {{ iorb_today or "N/A" }}
-            {% else %}
-              {% if iorb_today is not none %}
-                N/A (Latest = {{ iorb_today }})
-              {% else %}
-                N/A
-              {% endif %}
-            {% endif %}
+            {{ iorb_today }}
           </li>
 
           <li class="mb-1"><strong>SOFR:</strong>
-            {% if show_today %}
-              {{ sofr_today or "N/A" }}
-            {% else %}
-              {% if sofr_today is not none %}
-                N/A (Latest = {{ sofr_today }})
-              {% else %}
-                N/A
-              {% endif %}
-            {% endif %}
+            {{ sofr_today }}
           </li>
 
           <li><strong>SRF:</strong>
-            {% if show_today %}
-              {{ srf_today or "N/A" }}
-            {% else %}
-              {% if srf_today is not none %}
-                N/A (Latest = {{ srf_today }})
-              {% else %}
-                N/A
-              {% endif %}
-            {% endif %}
+            {{ srf_today }}
           </li>
+
         </ul>
 
         <p class="small text-muted mt-3 mb-0">
@@ -114,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const chartData = {{ chart_data | tojson }};
   const dates = chartData.date;
 
-  // Colors chosen to match your dark UI theme
   const series = [
     { name: "ON_RRP", color: "#53a3ff" },
     { name: "EFFR",   color: "#ff6b6b" },
