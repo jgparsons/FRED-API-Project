@@ -7,6 +7,8 @@ from app.send_emails import send_email_to_list
 
 MAILING_LIST = os.getenv("MAILING_LIST")
 
+# used for running daily email
+# this is prompted by a Render cron job
 def main():
     print("Running daily email job...")
 
