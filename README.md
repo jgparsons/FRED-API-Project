@@ -26,6 +26,8 @@ a Mailgun mailing list, which users can create or select from at https://app.mai
 
 These environment variables should be named MAILGUN_DOMAIN, MAILGUN_API_KEY, MAILGUN_SENDER_ADDRESS, and MAILING_LIST, respectively, in the .env file
 
+Users must also add the line "FLASK_APP=web_app" to their .env file
+
 ### Virtual Environment
 
 Create and activate a virtual environment:
