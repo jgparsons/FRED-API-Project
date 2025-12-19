@@ -6,6 +6,18 @@ Can be found online at: https://fred-api-project.onrender.com/
 
 ## Setup
 
+### Obtain Environment Variables
+
+To run this program locally, users will need certain environment variables to put into their .env file:
+
+a FRED API key, which users can obtain at https://fred.stlouisfed.org/docs/api/api_key.html
+
+This key should be set as FRED_API_KEY in the .env file
+
+a Mailgun API key, Mailgun domain, Mailgun sender address, and Mailgun mailing list, which users can set up at https://app.mailgun.com/
+
+These environment variables should be named MAILGUN_API_KEY, MAILGUN_DOMAIN, MAILGUN_SENDER_ADDRESS, and MAILING_LIST, respectively, in the .env file
+
 ### Virtual Environment
 
 Create and activate a virtual environment:
