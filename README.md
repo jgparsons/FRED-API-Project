@@ -14,9 +14,19 @@ a FRED API key, which users can obtain at https://fred.stlouisfed.org/docs/api/a
 
 This key should be set as FRED_API_KEY in the .env file
 
-a Mailgun API key, Mailgun domain, Mailgun sender address, and Mailgun mailing list, which users can set up at https://app.mailgun.com/
 
-These environment variables should be named MAILGUN_API_KEY, MAILGUN_DOMAIN, MAILGUN_SENDER_ADDRESS, and MAILING_LIST, respectively, in the .env file
+
+a Mailgun domain, which can be created or selected from a current domain at https://app.mailgun.com/mg/sending/domains
+
+a Mailgun API key, which can be create or found in the domain settings for any Mailgun domain you choose to create or use at https://app.mailgun.com/mg/sending/domains
+
+a Mailgun sender address, which can be found in the SMTP credentials tab of the domain settings for a given domain at https://app.mailgun.com/mg/sending/domains
+
+a Mailgun mailing list, which users can create or select from at https://app.mailgun.com/mg/sending/mailing-lists
+
+These environment variables should be named MAILGUN_DOMAIN, MAILGUN_API_KEY, MAILGUN_SENDER_ADDRESS, and MAILING_LIST, respectively, in the .env file
+
+Users must also add the line "FLASK_APP=web_app" to their .env file
 
 ### Virtual Environment
 
